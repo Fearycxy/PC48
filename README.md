@@ -1,23 +1,23 @@
-# test1
+# pc48
 
 ## Project setup
 ```
-npm install
+npm install or yarn install
 ```
 
 ### Compiles and hot-reloads for development
 ```
-npm run serve
+npm run electron:serve or yarn electron:serve or vue ui
 ```
 
 ### Compiles and minifies for production
 ```
-npm run build
+npm run build or yarn build
 ```
 
 ### Lints and fixes files
 ```
-npm run lint
+npm run lint or yarn lint
 ```
 
 ### Customize configuration
