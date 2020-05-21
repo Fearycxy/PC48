@@ -128,7 +128,7 @@ class Tools {
 /* eslint-disable */
     static checkForUpdate() {
         return new Promise((resolve, reject) => {
-            axios.get('https://raw.githubusercontent.com/Jarvay/desktop48/master/package.json').then(response => {
+            axios.get('https://github.com/Fearycxy/PC48/blob/master/package.json').then(response => {
                 const remoteVersion = response.data.version;
                 const localVersion = require('../../../package').version;
                 const localVerArray = localVersion.split('.');
