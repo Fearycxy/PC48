@@ -1,0 +1,150 @@
+// Variables
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+#app {
+  width: 100%;
+  height: 540px;
+}
+
+.vjs-big-play-button {
+  display: none !important;
+}
+
+.vjs-error-display, .vjs-modal-dialog {
+  display: none;
+}
+
+div[id^="vjs_video_"] {
+  width: 400px;
+  height: 640px;
+}
+
+.layout {
+  min-height: 800px;
+  padding: 4px 0;
+  border: 1px solid #d7dde4;
+  background: #f5f7f9;
+  position: relative;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+
+.barrage-input-box {
+  display: flex;
+  margin-top: 8px;
+}
+
+.ivu-carousel-track, .ivu-carousel-item {
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  height: 640px;
+}
+
+.picture {
+  max-width: 400px;
+  max-height: 640px;
+}
+
+.player-container {
+  display: flex;
+}
+
+.video {
+  display: flex;
+  justify-content: center;
+  width: 400px;
+  height: 640px;
+}
+
+.barrage-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  .barrage-box {
+    flex: 1 0 auto;
+    height: 640px;
+  }
+}
+
+.team-badge {
+  height: 18px;
+  margin-left: 8px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 32px;
+  padding: 0 4px;
+  border-radius: 24px;
+  color: white;
+  font-size: 12px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.ivu-layout-header {
+  padding: 0 32px;
+}
+
+.cover-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+
+  .cover {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+  }
+}
+
+.live-card {
+  cursor: pointer;
+  .live-title {
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .live-info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .member-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .live-date {
+    margin-top: 4px;
+    color: #cccccc;
+  }
+}
+
+.username, .message-time {
+  color: #cccccc;
+}
+
+
+.message-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
