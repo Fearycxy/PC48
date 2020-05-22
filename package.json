@@ -1,5 +1,5 @@
 {
-  "name": "test1",
+  "name": "PC48",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -17,13 +17,16 @@
     "core-js": "^3.6.4",
     "ffmpeg-static": "^4.2.2",
     "fluent-ffmpeg": "^2.1.2",
+    "flv.js": "^1.5.0",
     "lowdb": "^1.0.0",
     "node-sass": "^4.14.1",
     "query-string": "^6.12.1",
     "sass-loader": "^8.0.2",
+    "videojs-contrib-hls": "^5.15.0",
     "view-design": "^4.0.0",
     "vue": "^2.6.11",
-    "vue-router": "^3.2.0"
+    "vue-router": "^3.2.0",
+    "vue-video-player": "^5.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.3.0",
@@ -51,7 +54,9 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {
+      "vue/no-use-v-if-with-v-for": "warn"
+    }
   },
   "browserslist": [
     "> 1%",

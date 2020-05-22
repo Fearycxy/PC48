@@ -17,6 +17,11 @@ const routes = [{
         path: '/live',
         name: 'Live',
         component: () => import('../components/Live.vue')
+    },
+    {
+        path: '/review',
+        name: 'Review',
+        component: () => import('../components/Review.vue')
     }
     // ,
     // {

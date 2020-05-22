@@ -125,14 +125,19 @@ ipcMain.on('load-window', (event, data) => {
     // width = !data.width ? data.width : 1440
     // height = !data.height ? data.height : 900
     let win = new BrowserWindow({
-        show: true,
-        width: 1440,
-        height: 900,
+        show: false,
+        width: 400,
+        height: 680,
+        title: data.title,
+        parent:mainWin,
         webPreferences: {
             nodeIntegration: true,
             plugins: true,
             webSecurity: false
         }
+    })
+    win.once('ready-to-show', () => {
+        win.show()
     })
     let url = process.env.WEBPACK_DEV_SERVER_URL ? (process.env.WEBPACK_DEV_SERVER_URL + data.url) : `app://./${data.url}`
     win.loadURL(url)
@@ -141,7 +146,7 @@ ipcMain.on('load-window', (event, data) => {
         win = null
     })
     // here we can send the data to the new window
-    win.webContents.on('did-finish-load', () => {
+    win.webContents.once('did-finish-load', () => {
         if (win != null)
             win.webContents.send('data', data);
     });

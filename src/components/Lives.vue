@@ -66,23 +66,19 @@ export default {
         }
     },
     created() {
-        Dev.log('Lives.vue', 'created')
         this.refresh()
     },
     methods: {
         getLiveList: function() {
-            Dev.log('Lives.vue exec Lives.getLiveList')
             this.liveSpinShow = true;
 
             Apis.lives("0", this.liveNext).then(content => {
-                Dev.log('Lives.vue', 'lives get response')
                 this.liveSpinShow = false;
                 // if (this.liveNext == content.next && this.liveNext != '0') {
                 //     this.showListEndTips();
                 //     return;
                 // }
 
-                Dev.log('Lives.vue', `change liveNext to ${this.liveNext}`)
                 const newList = [];
                 content.liveList.forEach(item => {
                     item.cover = Tools.pictureUrls(item.coverPath);

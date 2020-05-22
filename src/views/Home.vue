@@ -4,7 +4,7 @@
             <TabPane label="App" :closable="homeClosable">
                 <Layout>
                     <Sider hide-trigger width="120">
-                        <Menu :active-name="$Constants.MENU.LIVES" theme="dark" width="auto" @on-select="onMenuSelect">
+                        <Menu :active-name="Constants.MENU.LIVES" theme="dark" width="auto" @on-select="onMenuSelect">
                             <MenuItem :name="Constants.MENU.LIVES">直播</MenuItem>
                             <MenuItem :name="Constants.MENU.REVIEWS">回放</MenuItem>
                             <MenuItem :name="Constants.MENU.TRIPS">行程</MenuItem>
@@ -13,22 +13,13 @@
                             <MenuItem :name="Constants.MENU.SETTINGS">设置</MenuItem>
                         </Menu>
                     </Sider>
-
-                     <Layout>
+                    <Layout>
                         <Content style="padding: 8px 16px;min-height: 600px;">
                             <Card>
                                 <div>
-                                    <Lives ref="lives" v-show="menus[Constants.MENU.LIVES]"
-                                           :col="colNum"
-                                           @on-item-click="openLive"></Lives>
-<!-- 
-                                    <Reviews ref="reviews" v-show="menus[Constants.MENU.REVIEWS]"
-                                             :col="colNum"
-                                             @on-item-click="openLive"
-                                             :members="members"
-                                             :teams="teams"
-                                             :groups="groups"></Reviews>
-
+                                    <Lives ref="lives" v-show="menus[Constants.MENU.LIVES]" :col="colNum" @on-item-click="openLive"></Lives>
+                                    <Reviews ref="reviews" v-show="menus[Constants.MENU.REVIEWS]" :col="colNum" @on-item-click="openLive" :members="members" :teams="teams" :groups="groups"></Reviews>
+                                    <!-- 
                                     <Trips v-show="menus[Constants.MENU.TRIPS]"></Trips>
 
                                     <MessageBox
@@ -56,6 +47,7 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 // import Live from "@/components/Live";
 import Lives from "@/components/Lives"
+import Reviews from "@/components/Reviews"
 import Constants from "@/assets/js/constants"
 import Database from "@/assets/js/database"
 const menus = {}
@@ -65,7 +57,7 @@ Object.keys(Constants.MENU).forEach(key => {
 
 export default {
     name: 'App',
-    components: {Lives},
+    components: { Lives, Reviews },
     data() {
         return {
             homeClosable: false,
@@ -73,7 +65,6 @@ export default {
             activeTab: 0,
             syncing: false,
             colNum: 8,
-            Constants:Constants,
             menuShow: {
                 lives: true,
                 reviews: false,
@@ -81,7 +72,7 @@ export default {
                 messages: false
             },
             menus: menus,
-            activeMenu: this.$Constants.MENU.LIVES,
+            activeMenu: this.Constants.MENU.LIVES,
             members: [],
             teams: [],
             groups: []
@@ -96,26 +87,26 @@ export default {
 
             this.liveTabs[index].show = false;
         },
-        openLive: function (item) {
-                const exists = this.liveTabs.some(tab => {
-                    return tab.liveId == item.liveId && tab.show == true;
-                });
-                if (exists) return;
-                const liveTab = {
-                    label: `${item.userInfo.nickname}的直播间`,
-                    title: item.title,
-                    liveId: item.liveId,
-                    show: true,
-                    name: item.liveId + '_' + Math.random().toString(36).substr(2),
-                    startTime: parseInt(item.ctime)
-                };
-                this.liveTabs.push(liveTab);
-                this.activeTab = liveTab.name;
-            },
+        openLive: function(item) {
+            const exists = this.liveTabs.some(tab => {
+                return tab.liveId == item.liveId && tab.show == true;
+            });
+            if (exists) return;
+            const liveTab = {
+                label: `${item.userInfo.nickname}的直播间`,
+                title: item.title,
+                liveId: item.liveId,
+                show: true,
+                name: item.liveId + '_' + Math.random().toString(36).substr(2),
+                startTime: parseInt(item.ctime)
+            };
+            this.liveTabs.push(liveTab);
+            this.activeTab = liveTab.name;
+        },
         onMenuSelect: function(name) {
             switch (name) {
-                case this.$Constants.MENU.JUJU:
-                case this.$Constants.MENU.MESSAGES:
+                case this.Constants.MENU.JUJU:
+                case this.Constants.MENU.MESSAGES:
                     if (!Database.isLogin()) {
                         this.$Message.warning({
                             content: '登录后才能使用'
