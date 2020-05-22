@@ -4,7 +4,7 @@
             <TabPane label="App" :closable="homeClosable">
                 <Layout>
                     <Sider hide-trigger width="120">
-                        <Menu :active-name="Constants.MENU.LIVES" theme="dark" width="auto" @on-select="onMenuSelect">
+                        <Menu :active-name="$Constants.MENU.LIVES" theme="dark" width="auto" @on-select="onMenuSelect">
                             <MenuItem :name="Constants.MENU.LIVES">直播</MenuItem>
                             <MenuItem :name="Constants.MENU.REVIEWS">回放</MenuItem>
                             <MenuItem :name="Constants.MENU.TRIPS">行程</MenuItem>
@@ -73,6 +73,7 @@ export default {
             activeTab: 0,
             syncing: false,
             colNum: 8,
+            Constants:Constants,
             menuShow: {
                 lives: true,
                 reviews: false,
@@ -80,8 +81,7 @@ export default {
                 messages: false
             },
             menus: menus,
-            Constants: Constants,
-            activeMenu: Constants.MENU.LIVES,
+            activeMenu: this.$Constants.MENU.LIVES,
             members: [],
             teams: [],
             groups: []
@@ -114,8 +114,8 @@ export default {
             },
         onMenuSelect: function(name) {
             switch (name) {
-                case this.Constants.MENU.JUJU:
-                case this.Constants.MENU.MESSAGES:
+                case this.$Constants.MENU.JUJU:
+                case this.$Constants.MENU.MESSAGES:
                     if (!Database.isLogin()) {
                         this.$Message.warning({
                             content: '登录后才能使用'

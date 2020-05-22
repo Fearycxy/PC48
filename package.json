@@ -19,6 +19,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "lowdb": "^1.0.0",
     "node-sass": "^4.14.1",
+    "query-string": "^6.12.1",
     "sass-loader": "^8.0.2",
     "view-design": "^4.0.0",
     "vue": "^2.6.11",

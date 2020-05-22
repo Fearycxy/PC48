@@ -5,11 +5,11 @@ import axios from 'axios'
 import './assets/sass/app.scss'
 import iView from 'iview'
 import 'iview/dist/styles/iview.css'
-import Constant from './assets/js/constants'
+import Constants from './assets/js/constants'
 
 Vue.config.productionTip = false
 Vue.use(iView)
-Vue.prototype.Constants = Constant
+Vue.prototype.$Constants = Constants
 Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 

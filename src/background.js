@@ -1,15 +1,16 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Menu, shell } from 'electron'
+import { app, protocol, BrowserWindow, Menu, shell, ipcMain } from 'electron'
 import {
     createProtocol,
     /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
+import Vue from 'vue'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+var mainWin
 
 
 
@@ -17,7 +18,7 @@ let win
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
 
 function createWindow() {
-    win = new BrowserWindow({
+    mainWin = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
@@ -27,21 +28,22 @@ function createWindow() {
     })
     if (process.env.WEBPACK_DEV_SERVER_URL) {
         // Load the url of the dev server if in development mode
-        win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-        if (!process.env.IS_TEST) win.webContents.openDevTools()
+        mainWin.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+        if (!process.env.IS_TEST) mainWin.webContents.openDevTools()
     } else {
         createProtocol('app')
         // Load the index.html when not in development
-        win.loadURL('app://./index.html')
+        mainWin.loadURL('app://./index.html')
     }
 
-    win.maximize()
-    win.show()
+    mainWin.maximize()
+    mainWin.show()
 
-    win.on('closed', () => {
-        win = null
+    mainWin.on('closed', () => {
+        mainWin = null
+        Vue.prototype.$mainWin = null
     })
-
+    Vue.prototype.$mainWin = mainWin
 }
 
 let template = [{
@@ -56,7 +58,7 @@ let template = [{
         {
             label: '调试',
             click: function() {
-                win.webContents.openDevTools()
+                mainWin.webContents.openDevTools()
             }
         }
     ]
@@ -74,7 +76,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (win === null) {
+    if (mainWin === null) {
         createWindow()
     }
 })
@@ -83,22 +85,22 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
-    if (isDevelopment && !process.env.IS_TEST) {
-        const menu = Menu.buildFromTemplate(template)
-        Menu.setApplicationMenu(menu)
-        // Install Vue Devtools
-        // Devtools extensions are broken in Electron 6.0.0 and greater
-        // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
-        // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
-        // If you are not using Windows 10 dark mode, you may uncomment these lines
-        // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
-        // try {
-        //   await installVueDevtools()
-        // } catch (e) {
-        //   console.error('Vue Devtools failed to install:', e.toString())
-        // }
+    // if (isDevelopment && !process.env.IS_TEST) {
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+    // Install Vue Devtools
+    // Devtools extensions are broken in Electron 6.0.0 and greater
+    // See https://github.com/nklayman/vue-cli-plugin-electron-builder/issues/378 for more info
+    // Electron will not launch with Devtools extensions installed on Windows 10 with dark mode
+    // If you are not using Windows 10 dark mode, you may uncomment these lines
+    // In addition, if the linked issue is closed, you can upgrade electron and uncomment these lines
+    // try {
+    //   await installVueDevtools()
+    // } catch (e) {
+    //   console.error('Vue Devtools failed to install:', e.toString())
+    // }
 
-    }
+    // }
     createWindow()
 })
 
@@ -117,6 +119,34 @@ if (isDevelopment) {
         })
     }
 }
+
+ipcMain.on('load-window', (event, data) => {
+    // create the window
+    // width = !data.width ? data.width : 1440
+    // height = !data.height ? data.height : 900
+    let win = new BrowserWindow({
+        show: true,
+        width: 1440,
+        height: 900,
+        webPreferences: {
+            nodeIntegration: true,
+            plugins: true,
+            webSecurity: false
+        }
+    })
+    let url = process.env.WEBPACK_DEV_SERVER_URL ? (process.env.WEBPACK_DEV_SERVER_URL + data.url) : `app://./${data.url}`
+    win.loadURL(url)
+    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    win.on('closed', () => {
+        win = null
+    })
+    // here we can send the data to the new window
+    win.webContents.on('did-finish-load', () => {
+        if (win != null)
+            win.webContents.send('data', data);
+    });
+
+});
 
 
 // Exit cleanly on request from parent process in development mode.

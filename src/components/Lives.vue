@@ -3,7 +3,7 @@
         <!-- eslint-disable -->
         <Header class="header">
             <div>
-                <Button type="primary" @click="refresh">刷新</Button>
+                <Button type="primary" @click="test">刷新</Button>
             </div>
         </Header>
         <Content>
@@ -47,7 +47,8 @@ import Apis from '../assets/js/apis';
 import Tools from '../assets/js/tools';
 import Database from "../assets/js/database";
 import Dev from '../assets/js/dev';
-
+import ipcMain from 'electron'
+let ipcRenderer = ipcMain.ipcRenderer
 export default {
     name: "Lives",
     props: {
@@ -113,6 +114,17 @@ export default {
             this.liveList = [];
             this.getLiveList();
         },
+        test() {
+            const data = {
+                url: 'live',
+                title: 'test',
+                nickname: 'test fake nickname',
+                streamPath: 'fake stream url',
+                liveType: 0,
+                id: 0
+            };
+            ipcRenderer.send('load-window', data);
+        },
         // onLiveReachBottom: function() {
         //     Dev.log('Lives.vue', `exec onLiveReachBottom next: ${this.liveNext}`)
         //     return new Promise(resolve => {
@@ -128,19 +140,15 @@ export default {
         onItemClick: function(item) {
             // this.$emit('on-item-click', item);
             Apis.live(item.liveId).then(content => {
-                const qs = {
+                const data = {
+                    url: 'live',
                     title: item.title,
                     nickname: item.userInfo.nickname,
                     streamPath: content.playStreamPath,
                     liveType: item.liveType,
                     id: item.liveId
                 };
-                console.log(qs.title)
-                // const u = './dist/videoPlay.html?' + querystring.stringify(qs);
-                // let win = new BrowserWindow({ width: 400, height: 600 })
-                // win.on('close', function() { win = null })
-                // win.loadURL(u)
-                // win.show()
+                ipcRenderer.send('load-window', data);
             }).catch(error => {
                 this.$Message.error({
                     content: `直播已结束！error: ${error}`
