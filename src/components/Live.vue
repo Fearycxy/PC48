@@ -12,9 +12,9 @@ import Constants from '../assets/js/constants.js'
 import ipcMain from 'electron'
 
 export default {
-    name: "Flv",
+    name: "Live",
     created() {
-        console.log(`Flv.vue create`)
+        console.log(`Live.vue create`)
         let ipcRenderer = ipcMain.ipcRenderer
         ipcRenderer.on('data', (event, data) => {
             console.log(data) // Prints 'whoooooooh!'
@@ -23,9 +23,8 @@ export default {
                 const flvPlayer = flvjs.createPlayer({
                     type: 'flv',
                     isLive: true,
-                    url: `http://localhost:${Constants.HTTP_PORT}/live/${ data.serveId }.flv`
+                    url: `http://localhost:${Constants.HTTP_PORT}/live/${ data.serverId }.flv`
                 });
-
                 flvPlayer.attachMediaElement(videoElement);
                 flvPlayer.load();
                 flvPlayer.play()

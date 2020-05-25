@@ -52,8 +52,7 @@ import Apis from '../assets/js/apis';
 import Tools from '../assets/js/tools';
 import Database from "../assets/js/database";
 import ipcMain from 'electron'
-let ipcRenderer = ipcMain.ipcRenderer
-
+let ipcRenderer = ipcMain.ipcRenderer;
 export default {
     name: "Reviews",
     props: {

@@ -8,6 +8,8 @@ Constants.MESSAGE_CLICK_INTERVAL = 5;  //消息点击间隔
 
 Constants.ATTENTION_LIMIT_INTERVAL = 10;    //关注操作间隔
 
+Constants.RTMP_PORT = 12000;
+Constants.HTTP_PORT = 12001;
 /**
  * 播放器类型
  * @type {string}
@@ -126,8 +128,5 @@ Constants.UNKNOWN_USER = {
     "wbUid": "",
     "status": 1
 };
-
-Constants.RTMP_PORT = 12000;
-Constants.HTTP_PORT = 12001;
 
 export default Constants;

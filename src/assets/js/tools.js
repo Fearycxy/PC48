@@ -31,7 +31,15 @@ Date.prototype.format = function(fmt) {
 
 const YI_ZHI_BO_HOST = 'alcdn.hls.xiaoka.tv';
 
-let portIndex = 0;
+var inc = (function create_counter(initial) {
+    var x = initial || 0;
+    return {
+        inc: function () {
+            x += 1;
+            return x;
+        }
+    }
+})(0).inc;
 class Tools {
 
     /**
@@ -156,8 +164,7 @@ class Tools {
     }
 
     static getIndex() {
-        portIndex++;
-        return portIndex;
+        return inc();
     }
     /* eslint-disable */
     static checkForUpdate() {
