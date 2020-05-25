@@ -127,5 +127,7 @@ Constants.UNKNOWN_USER = {
     "status": 1
 };
 
+Constants.RTMP_PORT = 12000;
+Constants.HTTP_PORT = 12001;
 
 export default Constants;

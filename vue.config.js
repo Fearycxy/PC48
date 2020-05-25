@@ -10,6 +10,18 @@ module.exports = {
                     return args
                 })
             },
+            builderOptions: {
+                "extraFiles": [{
+                    "from": "resources",
+                    "to": "Resources",
+                    "filter": "**/*"
+                }]
+            }
         }
+    },
+    pages: {
+        index: 'src/main.js',
+        live: 'src/subpage/live.js',
+        review: 'src/subpage/review.js'
     }
 }

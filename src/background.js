@@ -6,13 +6,15 @@ import {
     /* installVueDevtools */
 } from 'vue-cli-plugin-electron-builder/lib'
 import Vue from 'vue'
+import path from 'path'
+import Constants from './assets/js/constants.js'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 var mainWin
 
-
+const resourcesPath = app.isPackaged ? path.dirname(app.getAppPath()) : path.resolve('resources')
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([{ scheme: 'app', privileges: { secure: true, standard: true } }])
@@ -63,12 +65,38 @@ let template = [{
         }
     ]
 }]
+global.ffmpegpath = resourcesPath + '/ffmpeg'
+// global.ffmpegpath = "/Users/feary/projects/vue/pc48/node_modules/ffmpeg-static/ffmpeg"
+function nodeMediaServerInit() {
+    const NodeMediaServer = require('node-media-server');
+    const config = {
+        rtmp: {
+            port: Constants.RTMP_PORT,
+            chunk_size: 60000,
+            gop_cache: true,
+            ping: 30,
+            ping_timeout: 60
+        },
+        http: {
+            port: Constants.HTTP_PORT,
+            allow_origin: '*'
+        },
+        trans: {
+            ffmpeg: global.ffmpegpath
+        }
+    };
+
+    var nms = new NodeMediaServer(config)
+    nms.run();
+}
+nodeMediaServerInit()
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
     // On macOS it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== 'darwin') {
+        server.close()
         app.quit()
     }
 })
@@ -129,7 +157,7 @@ ipcMain.on('load-window', (event, data) => {
         width: 400,
         height: 680,
         title: data.title,
-        parent:mainWin,
+        parent: mainWin,
         webPreferences: {
             nodeIntegration: true,
             plugins: true,
@@ -139,7 +167,7 @@ ipcMain.on('load-window', (event, data) => {
     win.once('ready-to-show', () => {
         win.show()
     })
-    let url = process.env.WEBPACK_DEV_SERVER_URL ? (process.env.WEBPACK_DEV_SERVER_URL + data.url) : `app://./${data.url}`
+    let url = process.env.WEBPACK_DEV_SERVER_URL ? (process.env.WEBPACK_DEV_SERVER_URL + data.url) : `app://./${data.url}.html`
     win.loadURL(url)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
     win.on('closed', () => {
@@ -153,5 +181,13 @@ ipcMain.on('load-window', (event, data) => {
 
 });
 
-
+// function handleExit() {
+//     console.log('Close my server properly')
+//     server.close(function() {
+//         process.exit(0);
+//     });
+// }
+// process.on('SIGINT', handleExit);
+// process.on('SIGTERM', () => handleExit)
+// process.on('SIGQUIT', () => handleExit)
 // Exit cleanly on request from parent process in development mode.

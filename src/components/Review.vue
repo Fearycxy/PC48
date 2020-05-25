@@ -7,7 +7,7 @@
 // import 'some-videojs-plugin'
 import 'video.js/dist/video-js.css'
 
-// import { videoPlayer } from 'vue-video-player'
+import { videoPlayer } from 'vue-video-player'
 import ipcMain from 'electron'
 let ipcRenderer = ipcMain.ipcRenderer
 import videojs from 'video.js'
@@ -15,6 +15,9 @@ window.videojs = videojs
 require('videojs-contrib-hls/dist/videojs-contrib-hls.js')
 export default {
     name: "Review",
+    components: {
+        videoPlayer
+    },
     created() {
         console.log(`Review.vue create`)
         ipcRenderer.on('data', (event, data) => {

@@ -1,8 +1,11 @@
 import ffmpeg from 'fluent-ffmpeg';
 import axios from 'axios';
+import Constants from './constants.js'
 
-const ffmpegPath = require('ffmpeg-static').replace('app.asar', 'app.asar.unpacked');
-ffmpeg.setFfmpegPath(ffmpegPath);
+const FFMPEG_PATH = require('electron').remote.getGlobal('ffmpegpath')
+ffmpeg.setFfmpegPath(FFMPEG_PATH);
+
+const childProcess = require('child_process');
 
 Date.prototype.format = function(fmt) {
     const o = {
@@ -28,12 +31,15 @@ Date.prototype.format = function(fmt) {
 
 const YI_ZHI_BO_HOST = 'alcdn.hls.xiaoka.tv';
 
+let portIndex = 0;
 class Tools {
+
     /**
      *
      * @param picturesStr
      * @returns {any[]}
      */
+
     static pictureUrls(picturesStr) {
         const pictures = picturesStr.split(',');
         return pictures.map(picture => {
@@ -102,17 +108,40 @@ class Tools {
         /* eslint-enable */
     }
 
-    static createVideoServer(playerStreamPath, port) {
+    static createVideoServer(playerStreamPath, port, type) {
         const http = require('http');
         return http.createServer((request, response) => {
             ffmpeg().input(playerStreamPath)
                 .nativeFramerate()
                 .videoCodec('copy')
                 .audioCodec('copy')
-                .format('mp4')
+                .format(type)
                 .outputOptions('-movflags', 'frag_keyframe+empty_moov')
                 .pipe(response);
         }).listen(port);
+    }
+
+    static play_rtmp(data) {
+        const args = [
+            '-re',
+            '-i',
+            data.playStreamPath,
+            '-c:v',
+            'libx264',
+            '-preset',
+            'superfast',
+            '-tune',
+            'zerolatency',
+            '-c:a',
+            'aac',
+            '-ar',
+            '44100',
+            '-f',
+            'flv',
+            `rtmp://localhost:${Constants.RTMP_PORT}/live/${ data.serverId }`
+        ];
+
+        childProcess.spawn(FFMPEG_PATH, args);
     }
 
     static isToday(timestamp) {
@@ -125,7 +154,12 @@ class Tools {
 
         return false;
     }
-/* eslint-disable */
+
+    static getIndex() {
+        portIndex++;
+        return portIndex;
+    }
+    /* eslint-disable */
     static checkForUpdate() {
         return new Promise((resolve, reject) => {
             axios.get('https://github.com/Fearycxy/PC48/blob/master/package.json').then(response => {
@@ -156,5 +190,4 @@ class Tools {
         });
     }
 }
-
 export default Tools;

@@ -1,10 +1,8 @@
 <template>
     <Layout>
         <!-- eslint-disable -->
-        <Header class="header">
-            <div>
-                <Button type="primary" @click="test">刷新</Button>
-            </div>
+        <Header class="header" align = "right">
+                <Button class="rf-btn" type="primary" @click="refresh">刷新</Button>
         </Header>
         <Content>
             <div>
@@ -65,7 +63,8 @@ export default {
             distance: -10
         }
     },
-    created() {
+    mounted() {
+        console.log('Lives.vue mounted')
         this.refresh()
     },
     methods: {
@@ -110,17 +109,6 @@ export default {
             this.liveList = [];
             this.getLiveList();
         },
-        test() {
-            const data = {
-                url: 'live',
-                title: 'test',
-                nickname: 'test fake nickname',
-                streamPath: 'fake stream url',
-                liveType: 0,
-                id: 0
-            };
-            ipcRenderer.send('load-window', data);
-        },
         // onLiveReachBottom: function() {
         //     Dev.log('Lives.vue', `exec onLiveReachBottom next: ${this.liveNext}`)
         //     return new Promise(resolve => {
@@ -136,15 +124,10 @@ export default {
         onItemClick: function(item) {
             // this.$emit('on-item-click', item);
             Apis.live(item.liveId).then(content => {
-                const data = {
-                    url: 'live',
-                    title: item.title,
-                    nickname: item.userInfo.nickname,
-                    streamPath: content.playStreamPath,
-                    liveType: item.liveType,
-                    id: item.liveId
-                };
-                ipcRenderer.send('load-window', data);
+                content.url = 'live';
+                content.serverId = Tools.getIndex();
+                Tools.play_rtmp(content);
+                ipcRenderer.send('load-window', content);
             }).catch(error => {
                 this.$Message.error({
                     content: `直播已结束！error: ${error}`
@@ -156,4 +139,8 @@ export default {
 }
 </script>
 <style scoped>
+.rf-btn {
+    display: inline-flex;
+    ;
+}
 </style>
